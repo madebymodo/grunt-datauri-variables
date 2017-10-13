@@ -10,6 +10,7 @@ fs      = require("fs")
 path    = require("path")
 _       = require("underscore")
 datauri = require("datauri")
+svguri  = require("./svguri")
 
 "use strict"
 
@@ -55,11 +56,12 @@ module.exports = (grunt) ->
           return false
 
         template = if options.useMap then mapVariableTemplate else variableTemplate
+        encodedData = if imagePath.lastIndexOf('.svg') isnt imagePath.length - 4 then datauri(imagePath) else svguri(imagePath)
 
         lines.push(
           template(
             varname: "#{options.varPrefix}#{path.basename(imagePath).split('.')[0]}#{options.varSuffix}"
-            base64_data: datauri(imagePath)
+            base64_data: encodedData
           )
         )
 
